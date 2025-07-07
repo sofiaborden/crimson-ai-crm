@@ -157,6 +157,127 @@ export const mockDonorProfiles: Record<string, Donor> = {
       ]
     },
     aiSnapshot: 'Lisa was a major donor who has not contributed in over 10 months. She has high capacity and previous strong engagement. Her lapse may be due to communication preferences or policy concerns. Reactivation efforts should focus on personal touch and addressing any potential concerns about campaign direction.'
+  },
+
+  'joseph-banks': {
+    id: 'joseph-banks',
+    name: 'Joseph M. Banks',
+    photoUrl: 'https://i.pravatar.cc/150?u=joseph-banks',
+    email: 'joseph.banks@email.com',
+    phone: '(555) 678-9012',
+    address: '987 Neighborhood Ave, Springfield, IL 62702',
+    contactInfo: {
+      home: '(555) 678-9012',
+      work: '(555) 678-9013',
+      email: 'joseph.banks@email.com',
+      website: 'linkedin.com/in/josephbanks'
+    },
+    aiBadges: ['Major Donor', 'Neighborhood MVP', 'Community Leader'],
+    predictiveAsk: 5000,
+    recurrencePrediction: 'Very Likely (92%)',
+    suggestedAction: 'Schedule major gift meeting within 2 weeks',
+    givingOverview: {
+      totalRaised: 15200,
+      consecutiveGifts: 12,
+      tier: 'Diamond Supporter',
+      topGifts: [
+        { name: 'Q1 2024', value: 5000 },
+        { name: 'Q4 2023', value: 2500 },
+        { name: 'Q3 2023', value: 3000 },
+        { name: 'Q2 2023', value: 2200 },
+        { name: 'Q1 2023', value: 2500 }
+      ]
+    },
+    aiSnapshot: 'Joseph is a cornerstone supporter and community leader in the Neighborhood MVPs segment. He has consistently increased his giving over the past 3 years and serves as an informal campaign ambassador in his community. His recent $5,000 gift demonstrates strong commitment. He prefers in-person meetings and responds well to policy briefings. Excellent candidate for campaign advisory role.',
+
+    // Enhanced AI-powered fields
+    contactIntelligence: {
+      lastContactDate: '2024-01-15',
+      lastContactMethod: 'phone',
+      lastContactOutcome: 'Scheduled major gift meeting for next week',
+      preferredContactMethod: 'phone',
+      bestContactTimes: ['10:00 AM - 12:00 PM', '2:00 PM - 4:00 PM'],
+      timezone: 'America/Chicago',
+      responsePattern: 'Responds within 2 hours during business days',
+      communicationNotes: 'Prefers detailed policy briefings. Appreciates personal touch.'
+    },
+
+    urgencyIndicators: {
+      isHotLead: true,
+      followUpDue: true,
+      daysSinceLastContact: 3,
+      urgencyLevel: 'high',
+      urgencyReason: 'Major gift meeting scheduled - follow up on $10K ask'
+    },
+
+    givingIntelligence: {
+      capacityScore: 95,
+      seasonalPatterns: ['Q4 giving surge', 'Election year increases'],
+      triggerEvents: ['Policy announcements', 'Community events', 'Personal milestones'],
+      peerComparison: 'Gives 40% more than similar demographic',
+      upgradeOpportunity: {
+        potential: 10000,
+        confidence: 88,
+        timing: 'Next 30 days',
+        strategy: 'Major gift proposal with community impact focus'
+      }
+    },
+
+    relationshipMapping: {
+      spouse: 'Margaret Banks',
+      family: ['Joseph Banks Jr.', 'Sarah Banks-Wilson'],
+      professionalConnections: ['Springfield Chamber of Commerce', 'Local Business Alliance'],
+      mutualConnections: ['Patricia Williams', 'Robert Davis', 'City Council Member Johnson'],
+      influenceNetwork: ['Neighborhood Association President', 'Community Foundation Board'],
+      employerMatching: true
+    },
+
+    actionMetrics: {
+      emailEngagement: {
+        openRate: 85,
+        clickRate: 45,
+        lastOpened: '2024-01-14'
+      },
+      eventHistory: [
+        { name: 'Town Hall Meeting', date: '2024-01-10', attended: true, role: 'VIP Guest' },
+        { name: 'Policy Briefing', date: '2023-12-15', attended: true, role: 'Attendee' },
+        { name: 'Community Fundraiser', date: '2023-11-20', attended: true, role: 'Host Committee' }
+      ],
+      volunteerActivities: ['Phone bank volunteer', 'Event host', 'Community outreach'],
+      websiteBehavior: {
+        lastVisit: '2024-01-14',
+        pagesViewed: 12,
+        timeSpent: 18
+      },
+      socialMediaEngagement: [
+        { platform: 'Facebook', activity: 'Shared campaign post', lastEngagement: '2024-01-13' },
+        { platform: 'LinkedIn', activity: 'Liked policy update', lastEngagement: '2024-01-12' }
+      ]
+    },
+
+    predictiveInsights: {
+      nextBestAction: {
+        action: 'Schedule in-person major gift meeting',
+        confidence: 92,
+        timing: 'Within 7 days',
+        expectedOutcome: '$10,000 commitment with monthly sustaining option'
+      },
+      donationLikelihood: {
+        next30Days: 92,
+        next60Days: 78,
+        next90Days: 65
+      },
+      churnRisk: {
+        score: 15,
+        factors: ['Highly engaged', 'Consistent giver', 'Community leader'],
+        preventionStrategy: 'Continue personal engagement and policy updates'
+      },
+      upsellOpportunities: [
+        { type: 'Major Gift', amount: 10000, confidence: 88, timing: 'Next 30 days' },
+        { type: 'Monthly Sustaining', amount: 500, confidence: 75, timing: 'Next 60 days' },
+        { type: 'Legacy Giving', amount: 50000, confidence: 45, timing: 'Next 12 months' }
+      ]
+    }
   }
 };
 
@@ -174,8 +295,8 @@ export const getDonorProfileByName = (name: string): Donor | null => {
     'David Kim': 'david-k',
     'Lisa M.': 'lisa-m',
     'Lisa Martinez': 'lisa-m',
-    'Joseph M. Banks': 'sarah-j', // Map Joseph Banks to Sarah for now
-    'Joseph Banks': 'sarah-j'
+    'Joseph M. Banks': 'joseph-banks',
+    'Joseph Banks': 'joseph-banks'
   };
 
   const profileKey = nameMapping[name];

@@ -4,12 +4,25 @@ import Button from '../ui/Button';
 import SegmentsDashboard from './SegmentsDashboard';
 import ROITrackingDashboard from './ROITrackingDashboard';
 import PerformanceAnalytics from './PerformanceAnalytics';
+import DonorProfileModal from '../ui/DonorProfileModal';
+import { getDonorProfileByName } from '../../utils/mockDonorProfiles';
+import { Donor } from '../../types';
 import { ArrowTrendingUpIcon, UsersIcon, SparklesIcon } from '../../constants';
 
 type FundraisingView = 'overview' | 'segments' | 'campaigns' | 'analytics' | 'roi' | 'performance';
 
 const FundraisingDashboard: React.FC = () => {
   const [currentView, setCurrentView] = useState<FundraisingView>('overview');
+  const [selectedDonor, setSelectedDonor] = useState<Donor | null>(null);
+  const [showDonorProfile, setShowDonorProfile] = useState(false);
+
+  const handleDonorClick = (donorName: string) => {
+    const donor = getDonorProfileByName(donorName);
+    if (donor) {
+      setSelectedDonor(donor);
+      setShowDonorProfile(true);
+    }
+  };
 
   const renderView = () => {
     switch (currentView) {
@@ -85,7 +98,16 @@ const FundraisingDashboard: React.FC = () => {
                   <div className="flex items-center justify-between p-3 bg-base-50 rounded-lg">
                     <div>
                       <h5 className="font-semibold">Major Gift: $5,000</h5>
-                      <p className="text-sm text-text-secondary">From Joseph Banks • Neighborhood MVPs segment</p>
+                      <p className="text-sm text-text-secondary">
+                        From{' '}
+                        <button
+                          onClick={() => handleDonorClick('Joseph Banks')}
+                          className="text-blue-600 hover:text-blue-800 underline-offset-2 hover:underline transition-colors"
+                        >
+                          Joseph Banks
+                        </button>
+                        {' '}• Neighborhood MVPs segment
+                      </p>
                     </div>
                     <Button size="sm" variant="secondary">View Donor</Button>
                   </div>
@@ -155,6 +177,13 @@ const FundraisingDashboard: React.FC = () => {
       </div>
       
       {renderView()}
+
+      {/* Donor Profile Modal */}
+      <DonorProfileModal
+        donor={selectedDonor}
+        isOpen={showDonorProfile}
+        onClose={() => setShowDonorProfile(false)}
+      />
     </div>
   );
 };

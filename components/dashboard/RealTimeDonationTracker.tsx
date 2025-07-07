@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CurrencyDollarIcon, TrophyIcon, FireIcon, SparklesIcon, ComputerDesktopIcon, PhoneIcon, CalendarIcon, MailIcon } from '../../constants';
+import { CurrencyDollarIcon, TrophyIcon, FireIcon, SparklesIcon, ComputerDesktopIcon, PhoneIcon, CalendarIcon, MailIcon, ChevronLeftIcon, ChevronRightIcon } from '../../constants';
 import DonorProfileModal from '../ui/DonorProfileModal';
 import { getDonorProfileByName } from '../../utils/mockDonorProfiles';
 import { Donor } from '../../types';
@@ -39,6 +39,7 @@ const RealTimeDonationTracker: React.FC = () => {
   const [newDonationAlert, setNewDonationAlert] = useState<Donation | null>(null);
   const [selectedDonor, setSelectedDonor] = useState<Donor | null>(null);
   const [showDonorProfile, setShowDonorProfile] = useState(false);
+  const [currentGoalIndex, setCurrentGoalIndex] = useState(0);
 
   const handleDonorClick = (donorName: string) => {
     const donor = getDonorProfileByName(donorName);
@@ -46,6 +47,14 @@ const RealTimeDonationTracker: React.FC = () => {
       setSelectedDonor(donor);
       setShowDonorProfile(true);
     }
+  };
+
+  const nextGoal = () => {
+    setCurrentGoalIndex((prev) => (prev + 1) % goals.length);
+  };
+
+  const prevGoal = () => {
+    setCurrentGoalIndex((prev) => (prev - 1 + goals.length) % goals.length);
   };
 
   // Simulate new donations
@@ -155,52 +164,93 @@ const RealTimeDonationTracker: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Goals Progress */}
+          {/* Goal Progress - Flippable Card */}
           <div className="lg:col-span-2">
             <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-3">
               <TrophyIcon className="w-4 h-4 text-yellow-500" />
               Goal Progress
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {goals.map((goal, index) => {
-                const percentage = getProgressPercentage(goal.current, goal.target);
-                const isNearGoal = percentage >= 80;
+            {(() => {
+              const currentGoal = goals[currentGoalIndex];
+              const percentage = getProgressPercentage(currentGoal.current, currentGoal.target);
+              const isNearGoal = percentage >= 80;
 
-                return (
-                  <div key={index} className="bg-white rounded-lg p-3 border border-gray-200">
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="font-medium text-gray-900 text-sm">{goal.label}</span>
-                      <span className="text-xs text-gray-600">{goal.deadline}</span>
-                    </div>
+              return (
+                <div className="bg-white rounded-lg p-4 border border-gray-200 relative">
+                  {/* Navigation Arrows */}
+                  <div className="absolute top-3 right-3 flex gap-1">
+                    <button
+                      onClick={prevGoal}
+                      className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                      aria-label="Previous goal"
+                    >
+                      <ChevronLeftIcon className="w-4 h-4 text-gray-600" />
+                    </button>
+                    <button
+                      onClick={nextGoal}
+                      className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                      aria-label="Next goal"
+                    >
+                      <ChevronRightIcon className="w-4 h-4 text-gray-600" />
+                    </button>
+                  </div>
+
+                  {/* Goal Content */}
+                  <div className="pr-20">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-bold text-gray-900">
-                        {formatCurrency(goal.current)}
+                      <span className="font-semibold text-gray-900 text-lg">{currentGoal.label}</span>
+                      <span className="text-sm text-gray-600">{currentGoal.deadline}</span>
+                    </div>
+
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="text-xl font-bold text-gray-900">
+                        {formatCurrency(currentGoal.current)}
                       </span>
-                      <span className="text-xs text-gray-600">
-                        of {formatCurrency(goal.target)}
+                      <span className="text-sm text-gray-600">
+                        of {formatCurrency(currentGoal.target)}
                       </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+
+                    <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden mb-3">
                       <div
-                        className={`h-full ${goal.color} transition-all duration-500 ease-out ${isNearGoal ? 'animate-pulse' : ''}`}
+                        className={`h-full ${currentGoal.color} transition-all duration-700 ease-out ${isNearGoal ? 'animate-pulse' : ''}`}
                         style={{ width: `${percentage}%` }}
                       ></div>
                     </div>
-                    <div className="flex justify-between items-center mt-1">
-                      <span className="text-xs font-medium text-gray-700">
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium text-gray-700">
                         {percentage.toFixed(1)}% complete
                       </span>
                       {isNearGoal && (
-                        <span className="text-xs text-orange-600 font-medium flex items-center gap-1">
-                          <FireIcon className="w-3 h-3" />
+                        <span className="text-sm text-orange-600 font-medium flex items-center gap-1">
+                          <FireIcon className="w-4 h-4" />
                           Almost there!
                         </span>
                       )}
                     </div>
+
+                    {/* Goal Indicators */}
+                    <div className="flex justify-center gap-3 mt-4">
+                      {goals.map((goal, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentGoalIndex(index)}
+                          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 border ${
+                            index === currentGoalIndex
+                              ? 'bg-blue-500 text-white border-blue-500 shadow-md'
+                              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400 hover:shadow-sm'
+                          }`}
+                          aria-label={`View ${goal.label} goal`}
+                        >
+                          {goal.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })()}
           </div>
 
           {/* Recent Donations Feed */}
