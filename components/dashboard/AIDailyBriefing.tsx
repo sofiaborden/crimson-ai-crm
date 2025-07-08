@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { SparklesIcon, ClockIcon, SunIcon, PhoneIcon, MailIcon, TrendingUpIcon, LightBulbIcon } from '../../constants';
+import { View } from '../../types';
+import DonorProfileModal from '../ui/DonorProfileModal';
+import { getDonorProfileByName } from '../../utils/mockDonorProfiles';
+import { Donor } from '../../types';
 
 interface BriefingAction {
   id: string;
@@ -33,8 +37,15 @@ interface TimingRecommendation {
   successRate: number;
 }
 
-const AIDailyBriefing: React.FC = () => {
+interface AIDailyBriefingProps {
+  setView?: (view: View) => void;
+  setProfileId?: (id: string) => void;
+}
+
+const AIDailyBriefing: React.FC<AIDailyBriefingProps> = ({ setView, setProfileId }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [selectedDonor, setSelectedDonor] = useState<Donor | null>(null);
+  const [showDonorProfile, setShowDonorProfile] = useState(false);
   const [userName] = useState('Sofia');
 
   const [todaysActions] = useState<BriefingAction[]>([
@@ -130,6 +141,23 @@ const AIDailyBriefing: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
+  const handleDonorClick = (donorName: string) => {
+    const donor = getDonorProfileByName(donorName);
+    if (donor) {
+      setSelectedDonor(donor);
+      setShowDonorProfile(true);
+    }
+  };
+
+  const handleViewProfile = (donorName: string) => {
+    if (setView && setProfileId) {
+      if (donorName === 'Joseph Banks') {
+        setProfileId('joseph-banks');
+        setView('profile');
+      }
+    }
+  };
+
   const getGreeting = () => {
     const hour = currentTime.getHours();
     if (hour < 12) return 'Good morning';
@@ -162,6 +190,31 @@ const AIDailyBriefing: React.FC = () => {
       currency: 'USD',
       minimumFractionDigits: 0,
     }).format(amount);
+  };
+
+  const renderClickableTitle = (title: string) => {
+    // Check if the title contains a donor name we can make clickable
+    const donorNames = ['Joseph Banks', 'Maria Rodriguez', 'David Chen', 'Sarah Johnson'];
+
+    for (const donorName of donorNames) {
+      if (title.includes(donorName)) {
+        const parts = title.split(donorName);
+        return (
+          <>
+            {parts[0]}
+            <button
+              onClick={() => handleDonorClick(donorName)}
+              className="text-blue-600 hover:text-blue-800 underline-offset-2 hover:underline font-medium transition-colors"
+            >
+              {donorName}
+            </button>
+            {parts[1]}
+          </>
+        );
+      }
+    }
+
+    return title;
   };
 
   return (
@@ -214,7 +267,7 @@ const AIDailyBriefing: React.FC = () => {
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium text-gray-900 text-sm">{action.title}</span>
+                        <span className="font-medium text-gray-900 text-sm">{renderClickableTitle(action.title)}</span>
                         <span className={`text-xs px-1.5 py-0.5 rounded-full border ${getPriorityColor(action.priority)}`}>
                           {action.priority}
                         </span>
@@ -346,6 +399,13 @@ const AIDailyBriefing: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Donor Profile Modal */}
+      <DonorProfileModal
+        donor={selectedDonor}
+        isOpen={showDonorProfile}
+        onClose={() => setShowDonorProfile(false)}
+      />
     </div>
   );
 };

@@ -65,7 +65,7 @@ const HomeDashboard: React.FC<HomeDashboardProps> = ({ setView, setProfileId }) 
       <RealTimeDonationTracker />
 
       {/* AI Daily Briefing - Enhanced with Quick Wins */}
-      <AIDailyBriefing />
+      <AIDailyBriefing setView={setView} setProfileId={setProfileId} />
 
       {/* Collapsible Quick Actions Bar */}
       <QuickActionsBar />
