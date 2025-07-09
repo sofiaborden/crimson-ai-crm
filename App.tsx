@@ -8,6 +8,7 @@ import ComplianceDashboard from './components/dashboard/ComplianceDashboard';
 import FundraisingDashboard from './components/dashboard/FundraisingDashboard';
 import PeopleDashboard from './components/dashboard/PeopleDashboard';
 import SearchDemo from './pages/SearchDemo';
+import DonorProfileDemo from './pages/DonorProfileDemo';
 import { View, Donor } from './types';
 
 const mockDonor: Donor = {
@@ -65,6 +66,8 @@ const App: React.FC = () => {
         return <PeopleDashboard setView={setCurrentView} setProfileId={setProfileId} />;
       case 'search-demo':
         return <SearchDemo />;
+      case 'donor-profile-demo':
+        return <DonorProfileDemo />;
       default:
         return (
             <div className="flex items-center justify-center h-full">
