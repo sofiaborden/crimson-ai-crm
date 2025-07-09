@@ -1,9 +1,17 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { BellIcon, MailIcon, SparklesIcon } from '../../constants';
+import CrimsonGPTPanel from '../ui/CrimsonGPTPanel';
 
 const Header: React.FC = () => {
+  const [showCrimsonGPT, setShowCrimsonGPT] = useState(false);
+
   return (
+    <>
+      <CrimsonGPTPanel
+        isOpen={showCrimsonGPT}
+        onClose={() => setShowCrimsonGPT(false)}
+      />
     <header className="bg-base-100/80 backdrop-blur-lg border-b border-base-300 sticky top-0 z-10">
       <div className="flex items-center justify-between h-16 px-6">
         <div className="flex items-center gap-4">
@@ -17,7 +25,10 @@ const Header: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <button className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-crimson-blue rounded-lg shadow-sm hover:bg-crimson-dark-blue transition-colors">
+          <button
+            onClick={() => setShowCrimsonGPT(true)}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-crimson-blue rounded-lg shadow-sm hover:bg-crimson-dark-blue transition-colors"
+          >
             <SparklesIcon />
             <span>CrimsonGPT Beta</span>
           </button>
@@ -45,6 +56,7 @@ const Header: React.FC = () => {
         </div>
       </div>
     </header>
+    </>
   );
 };
 
