@@ -26,25 +26,18 @@ const DonorProfileModal: React.FC<DonorProfileModalProps> = ({ donor, isOpen, on
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-7xl max-h-[95vh] overflow-hidden">
-        {/* Modern Header with Tabs */}
+        {/* Simplified Header */}
         <div className="bg-gradient-to-r from-crimson-blue to-blue-600 text-white p-6">
-          <div className="flex justify-between items-start mb-4">
-            <div className="flex items-center gap-4">
-              <img
-                src={donor.photoUrl}
-                alt={donor.name}
-                className="w-16 h-16 rounded-full ring-4 ring-white/30 shadow-lg"
-              />
-              <div>
-                <h2 className="text-2xl font-bold">{donor.name}</h2>
-                <p className="text-blue-100">{donor.email}</p>
-                <div className="flex gap-2 mt-2">
-                  {donor.aiBadges.slice(0, 2).map(badge => (
-                    <span key={badge} className="bg-white/20 text-white text-xs px-2 py-1 rounded-full border border-white/30">
-                      {badge}
-                    </span>
-                  ))}
-                </div>
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-2xl font-bold">{donor.name}</h2>
+              <p className="text-blue-100">{donor.email} • {donor.phone}</p>
+              <div className="flex gap-2 mt-2">
+                {donor.aiBadges.slice(0, 3).map(badge => (
+                  <span key={badge} className="bg-white/20 text-white text-xs px-2 py-1 rounded-full border border-white/30">
+                    {badge}
+                  </span>
+                ))}
               </div>
             </div>
             <button
@@ -53,24 +46,6 @@ const DonorProfileModal: React.FC<DonorProfileModalProps> = ({ donor, isOpen, on
             >
               <XMarkIcon className="w-6 h-6 text-white" />
             </button>
-          </div>
-
-          {/* Tab Navigation */}
-          <div className="flex gap-1 bg-white/10 rounded-lg p-1">
-            {tabs.map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all duration-200 ${
-                  activeTab === tab.id
-                    ? 'bg-white text-crimson-blue shadow-sm font-semibold'
-                    : 'text-white/80 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                {tab.icon}
-                {tab.label}
-              </button>
-            ))}
           </div>
         </div>
 
