@@ -25,7 +25,7 @@ import {
   BellIcon,
   StarIcon
 } from '../../constants';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, CartesianGrid } from 'recharts';
 
 interface EnhancedDonorProfileProps {
   donor: Donor;
