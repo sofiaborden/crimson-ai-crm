@@ -207,47 +207,47 @@ Your support would help us reach more voters in the final push. What do you thin
 
   return (
     <>
-      <div className="bg-white rounded-lg border border-gray-200 p-3">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <div className="bg-red-500 p-1.5 rounded-lg">
-              <FireIcon className="w-4 h-4 text-white" />
+      <div className="bg-white rounded-xl border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="bg-red-500/10 p-3 rounded-xl shadow-sm">
+              <FireIcon className="w-5 h-5 text-red-500" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-gray-900">Hot Leads</h2>
-              <p className="text-xs text-gray-600">High conversion prospects</p>
+              <h2 className="text-xl font-bold text-gray-900">Hot Leads</h2>
+              <p className="text-sm text-gray-600 mt-1">High conversion prospects</p>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-2xl font-bold text-red-600">{hotLeads.length}</div>
-            <div className="text-sm text-gray-600">prospects ready</div>
+            <div className="text-3xl font-bold text-red-600">{hotLeads.length}</div>
+            <div className="text-sm text-gray-600 font-medium">prospects ready</div>
           </div>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-4">
           {hotLeads.map((lead) => (
-            <div key={lead.id} className="border border-gray-200 rounded-lg p-2 hover:shadow-sm transition-shadow">
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 flex-1 min-w-0">
+            <div key={lead.id} className="border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-gray-300 transition-all duration-300">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 flex-1 min-w-0">
                   <img
                     src={lead.avatar}
                     alt={lead.name}
-                    className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                    className="w-10 h-10 rounded-full object-cover flex-shrink-0 shadow-sm"
                   />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex items-center gap-2 mb-2">
                       <button
                         onClick={() => handleDonorClick(lead.name)}
-                        className="font-semibold text-blue-600 hover:text-blue-800 truncate underline-offset-2 hover:underline transition-colors text-sm"
+                        className="font-bold text-blue-600 hover:text-blue-800 truncate underline-offset-2 hover:underline transition-colors text-sm"
                       >
                         {lead.name}
                       </button>
-                      <span className={`text-xs px-1.5 py-0.5 rounded-full border ${getPriorityColor(lead.priority)}`}>
+                      <span className={`text-xs px-2 py-1 rounded-full border font-semibold ${getPriorityColor(lead.priority)}`}>
                         {lead.priority}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-600 mb-1 line-clamp-1">{lead.reason}</p>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <p className="text-sm text-gray-700 mb-2 line-clamp-1 leading-relaxed">{lead.reason}</p>
+                    <div className="flex items-center gap-3 text-xs text-gray-500">
                       <span className="flex items-center gap-1">
                         <ClockIcon className="w-3 h-3" />
                         <span className="truncate">{lead.bestTimeToCall}</span>

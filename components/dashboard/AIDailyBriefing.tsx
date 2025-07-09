@@ -219,58 +219,58 @@ const AIDailyBriefing: React.FC<AIDailyBriefingProps> = ({ setView, setProfileId
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
-      {/* Compact Header */}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="bg-crimson-blue p-2 rounded-lg">
-          <SparklesIcon className="w-5 h-5 text-white" />
+    <div className="bg-white rounded-xl border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300 p-6">
+      {/* Modern Header */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="bg-crimson-blue/10 p-3 rounded-xl shadow-sm">
+          <SparklesIcon className="w-5 h-5 text-crimson-blue" />
         </div>
         <div>
-          <h2 className="text-lg font-bold text-crimson-blue">
+          <h2 className="text-xl font-bold text-gray-900">
             🪄 {userName}'s Daily AI Briefing
           </h2>
-          <p className="text-xs text-gray-600">Smart actions to maximize fundraising today</p>
+          <p className="text-sm text-gray-600 mt-1">Smart actions to maximize fundraising today</p>
         </div>
       </div>
 
-      {/* Enhanced Top 3 Actions - Compact but Detailed */}
-      <div className="mb-4">
-        <h3 className="font-semibold text-gray-900 flex items-center gap-2 text-sm mb-3">
-          <TrendingUpIcon className="w-4 h-4 text-crimson-blue" />
+      {/* Enhanced Top 3 Actions - Modern Design */}
+      <div className="mb-6">
+        <h3 className="font-bold text-gray-900 flex items-center gap-2 text-base mb-4">
+          <TrendingUpIcon className="w-5 h-5 text-crimson-blue" />
           Top 3 Actions Today
         </h3>
 
-        <div className="space-y-3">
+        <div className="space-y-4">
           {todaysActions.map((action, index) => (
-            <div key={action.id} className="bg-white rounded-lg border border-gray-200 p-3 hover:shadow-sm transition-shadow">
+            <div key={action.id} className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100 p-4 hover:shadow-md hover:border-blue-200 transition-all duration-300">
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-3 flex-1">
-                  <div className="bg-blue-100 p-1.5 rounded">
+                  <div className="bg-white p-2 rounded-xl shadow-sm border border-blue-200">
                     {getTypeIcon(action.type)}
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-medium text-gray-900 text-sm">{renderClickableTitle(action.title)}</span>
-                      <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${getPriorityColor(action.priority)}`}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="font-semibold text-gray-900 text-sm">{renderClickableTitle(action.title)}</span>
+                      <span className={`text-xs px-2 py-1 rounded-full border font-semibold ${getPriorityColor(action.priority)}`}>
                         {action.priority}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-600 mb-2">{action.description}</p>
+                    <p className="text-sm text-gray-700 mb-3 leading-relaxed">{action.description}</p>
                     <div className="flex items-center gap-4 text-xs">
-                      <span className="flex items-center gap-1 text-gray-500">
+                      <span className="flex items-center gap-1 text-gray-600 bg-white px-2 py-1 rounded-full">
                         <ClockIcon className="w-3 h-3" />
                         {action.estimatedTime}
                       </span>
-                      <span className="font-semibold text-green-600">
+                      <span className="font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">
                         {formatCurrency(action.potentialValue)}
                       </span>
-                      <span className="font-semibold text-crimson-blue">
+                      <span className="font-bold text-crimson-blue bg-blue-50 px-2 py-1 rounded-full">
                         {action.confidence}%
                       </span>
                     </div>
                   </div>
                 </div>
-                <button className="bg-crimson-blue text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-crimson-dark-blue transition-colors">
+                <button className="bg-crimson-blue text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-crimson-dark-blue hover:shadow-md transition-all duration-200">
                   Start
                 </button>
               </div>
@@ -279,61 +279,61 @@ const AIDailyBriefing: React.FC<AIDailyBriefingProps> = ({ setView, setProfileId
         </div>
       </div>
 
-      {/* Compact Success Forecast & Quick Wins */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      {/* Modern Success Forecast & Quick Wins */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {/* Success Forecast */}
-        <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 p-3">
-          <div className="flex items-center justify-between mb-2">
-            <h4 className="font-semibold text-crimson-blue flex items-center gap-2 text-sm">
+        <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 p-4 shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="font-bold text-gray-900 flex items-center gap-2 text-sm">
               🎯 Success Forecast: {successPrediction.weeklyGoalProgress}%
             </h4>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+          <div className="w-full bg-white rounded-full h-3 mb-3 shadow-inner">
             <div
-              className="bg-green-500 h-2 rounded-full transition-all duration-500"
+              className="bg-gradient-to-r from-green-500 to-emerald-500 h-3 rounded-full transition-all duration-500 shadow-sm"
               style={{ width: `${successPrediction.weeklyGoalProgress}%` }}
             ></div>
           </div>
-          <p className="text-xs text-gray-600">
-            <span className="font-medium text-green-600">{successPrediction.likelihood}% likely</span> to hit weekly target
+          <p className="text-sm text-gray-700">
+            <span className="font-bold text-green-600">{successPrediction.likelihood}% likely</span> to hit weekly target
           </p>
-          <p className="text-xs text-gray-600 mt-1">{successPrediction.recommendation}</p>
+          <p className="text-sm text-gray-600 mt-2 leading-relaxed">{successPrediction.recommendation}</p>
         </div>
 
         {/* Quick Wins */}
-        <div className="bg-gradient-to-r from-yellow-50 to-amber-50 rounded-lg border border-yellow-200 p-3">
-          <h4 className="font-semibold text-crimson-blue flex items-center gap-2 text-sm mb-2">
+        <div className="bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl border border-yellow-200 p-4 shadow-sm">
+          <h4 className="font-bold text-gray-900 flex items-center gap-2 text-sm mb-3">
             <LightBulbIcon className="w-4 h-4 text-yellow-500" />
             Quick Wins ({quickWins.filter(w => !w.completed).length} remaining)
           </h4>
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             {quickWins.slice(0, 2).map((win) => (
-              <div key={win.id} className="flex items-start gap-2">
+              <div key={win.id} className="flex items-start gap-3">
                 <button
                   onClick={() => setQuickWins(prev =>
                     prev.map(w => w.id === win.id ? { ...w, completed: !w.completed } : w)
                   )}
-                  className={`mt-0.5 w-3 h-3 rounded border-2 flex items-center justify-center transition-colors ${
+                  className={`mt-1 w-4 h-4 rounded border-2 flex items-center justify-center transition-all duration-200 ${
                     win.completed
-                      ? 'bg-green-500 border-green-500 text-white'
-                      : 'border-gray-300 hover:border-green-400'
+                      ? 'bg-green-500 border-green-500 text-white shadow-sm'
+                      : 'border-gray-300 hover:border-green-400 bg-white'
                   }`}
                 >
                   {win.completed && (
-                    <svg className="w-2 h-2" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   )}
                 </button>
                 <div className="flex-1">
-                  <p className={`text-xs font-medium ${win.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
+                  <p className={`text-sm font-medium leading-relaxed ${win.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
                     {win.title}
                   </p>
                 </div>
               </div>
             ))}
             {quickWins.length > 2 && (
-              <button className="text-xs text-crimson-blue hover:text-crimson-dark-blue font-medium">
+              <button className="text-sm text-crimson-blue hover:text-crimson-dark-blue font-semibold transition-colors">
                 Show all {quickWins.length} items →
               </button>
             )}
@@ -341,27 +341,27 @@ const AIDailyBriefing: React.FC<AIDailyBriefingProps> = ({ setView, setProfileId
         </div>
       </div>
 
-      {/* Collapsible AI Insights */}
-      <div className="border-t border-gray-200 pt-3">
+      {/* Modern Collapsible AI Insights */}
+      <div className="border-t border-gray-200 pt-4">
         <button
           onClick={() => setShowInsights(!showInsights)}
-          className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-crimson-blue transition-colors"
+          className="flex items-center gap-3 text-sm font-semibold text-gray-700 hover:text-crimson-blue transition-colors duration-200"
         >
           <LightBulbIcon className="w-4 h-4" />
           💡 AI Insights
-          <svg className={`w-4 h-4 transition-transform ${showInsights ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className={`w-4 h-4 transition-transform duration-200 ${showInsights ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </button>
 
         {showInsights && (
-          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-            <div className="bg-blue-50 rounded p-2 border border-blue-200">
-              <span className="font-medium text-blue-900">🌧️ {weatherInsight.condition}</span>
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-3 border border-blue-200 shadow-sm">
+              <span className="font-bold text-blue-900">🌧️ {weatherInsight.condition}</span>
               <span className="text-blue-700 ml-2">{weatherInsight.impact}</span>
             </div>
-            <div className="bg-purple-50 rounded p-2 border border-purple-200">
-              <span className="font-medium text-purple-900">📞 Best call window:</span>
+            <div className="bg-gradient-to-r from-purple-50 to-violet-50 rounded-xl p-3 border border-purple-200 shadow-sm">
+              <span className="font-bold text-purple-900">📞 Best call window:</span>
               <span className="text-purple-700 ml-1">10:30–12:00 (78% pickup)</span>
             </div>
           </div>
