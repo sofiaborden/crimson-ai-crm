@@ -326,6 +326,92 @@ export const useSearch = () => {
         };
         break;
 
+      // Geographic searches
+      case 'location-state':
+        config = {
+          type: 'people',
+          filters: [{
+            id: 'state-filter',
+            field: 'State',
+            operator: 'equals',
+            value: cardData.locationName || '',
+            label: `State = ${cardData.locationName || 'Unknown'}`
+          }],
+          context: `People in ${cardData.locationName || 'Unknown'} (${cardData.count?.toLocaleString() || '0'})`
+        };
+        break;
+
+      case 'location-county':
+        config = {
+          type: 'people',
+          filters: [{
+            id: 'county-filter',
+            field: 'County',
+            operator: 'equals',
+            value: cardData.locationName || '',
+            label: `County = ${cardData.locationName || 'Unknown'}`
+          }],
+          context: `People in ${cardData.locationName || 'Unknown'} County (${cardData.count?.toLocaleString() || '0'})`
+        };
+        break;
+
+      case 'location-city':
+        config = {
+          type: 'people',
+          filters: [{
+            id: 'city-filter',
+            field: 'City',
+            operator: 'equals',
+            value: cardData.locationName || '',
+            label: `City = ${cardData.locationName || 'Unknown'}`
+          }],
+          context: `People in ${cardData.locationName || 'Unknown'} (${cardData.count?.toLocaleString() || '0'})`
+        };
+        break;
+
+      // Category searches
+      case 'category-flag':
+        config = {
+          type: 'people',
+          filters: [{
+            id: 'flag-filter',
+            field: 'Flags',
+            operator: 'contains',
+            value: cardData.categoryName || '',
+            label: `Flag: ${cardData.categoryName || 'Unknown'}`
+          }],
+          context: `People with ${cardData.categoryName || 'Unknown'} Flag (${cardData.count?.toLocaleString() || '0'})`
+        };
+        break;
+
+      case 'category-keyword':
+        config = {
+          type: 'people',
+          filters: [{
+            id: 'keyword-filter',
+            field: 'Keywords',
+            operator: 'contains',
+            value: cardData.categoryName || '',
+            label: `Keyword: ${cardData.categoryName || 'Unknown'}`
+          }],
+          context: `People with ${cardData.categoryName || 'Unknown'} Keyword (${cardData.count?.toLocaleString() || '0'})`
+        };
+        break;
+
+      case 'category-club':
+        config = {
+          type: 'people',
+          filters: [{
+            id: 'club-filter',
+            field: 'Clubs',
+            operator: 'contains',
+            value: cardData.categoryName || '',
+            label: `Club: ${cardData.categoryName || 'Unknown'}`
+          }],
+          context: `People in ${cardData.categoryName || 'Unknown'} (${cardData.count?.toLocaleString() || '0'})`
+        };
+        break;
+
       default:
         config = {
           type: 'people',

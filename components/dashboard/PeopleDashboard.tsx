@@ -5,6 +5,8 @@ import Button from '../ui/Button';
 import Badge from '../ui/Badge';
 import DonorProfileModal from '../ui/DonorProfileModal';
 import SearchModal from '../search/SearchModal';
+import CompactGeographicIntelligence from './CompactGeographicIntelligence';
+import CompactIntelligenceCategories from './CompactIntelligenceCategories';
 import { getDonorProfileByName } from '../../utils/mockDonorProfiles';
 import { Donor } from '../../types';
 import { useSearch } from '../../hooks/useSearch';
@@ -187,6 +189,15 @@ const PeopleDashboard: React.FC<PeopleDashboardProps> = ({ setView, setProfileId
   const [selectedDonor, setSelectedDonor] = useState<Donor | null>(null);
   const [showDonorProfile, setShowDonorProfile] = useState(false);
   const { isSearchOpen, searchConfig, closeSearch, searchFromCard } = useSearch();
+
+  // Search handlers for compact components
+  const handleLocationSearch = (locationType: string, locationName: string, count: number) => {
+    searchFromCard(`location-${locationType}`, { locationName, count });
+  };
+
+  const handleCategorySearch = (categoryType: string, categoryName: string, count: number) => {
+    searchFromCard(`category-${categoryType}`, { categoryName, count });
+  };
 
   const handleViewProfile = () => {
     setProfileId('joseph-banks');
@@ -411,209 +422,23 @@ const PeopleDashboard: React.FC<PeopleDashboardProps> = ({ setView, setProfileId
             </div>
           </Card>
 
-          {/* Geographic Intelligence */}
-          <Card>
-            <div className="p-6">
-              <div className="flex items-center gap-2 mb-6">
-                <MapPinIcon className="w-6 h-6 text-crimson-blue" />
-                <h2 className="text-xl font-bold text-gray-900">Geographic Intelligence</h2>
-              </div>
+          {/* Compact Geographic Intelligence */}
+          <CompactGeographicIntelligence
+            data={topCategories.locations}
+            onSearchLocation={handleLocationSearch}
+          />
 
-              <div className="space-y-6">
-                {/* Top States */}
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-700 mb-3">Top 5 States</h3>
-                  <div className="space-y-2">
-                    {topCategories.locations.states.map((state, index) => (
-                      <div key={state.name} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                        <div className="flex items-center gap-3">
-                          <span className="text-xs font-medium text-gray-500 w-4">#{index + 1}</span>
-                          <span className="font-medium text-gray-900">{state.name}</span>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-sm font-semibold text-crimson-blue">
-                            {state.count.toLocaleString()}
-                          </div>
-                          <div className="text-xs text-gray-600">
-                            ${(state.raised / 1000000).toFixed(1)}M raised
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+          {/* Compact Intelligence Categories */}
+          <CompactIntelligenceCategories
+            data={{
+              flags: topCategories.flags,
+              keywords: topCategories.keywords,
+              clubs: topCategories.clubs
+            }}
+            onSearchCategory={handleCategorySearch}
+          />
 
-                {/* Top Counties */}
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-700 mb-3">Top 5 Counties</h3>
-                  <div className="space-y-2">
-                    {topCategories.locations.counties.map((county, index) => (
-                      <div key={county.name} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                        <div className="flex items-center gap-3">
-                          <span className="text-xs font-medium text-gray-500 w-4">#{index + 1}</span>
-                          <span className="font-medium text-gray-900 text-sm">{county.name}</span>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-sm font-semibold text-crimson-blue">
-                            {county.count.toLocaleString()}
-                          </div>
-                          <div className="text-xs text-gray-600">
-                            ${(county.raised / 1000000).toFixed(1)}M
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Card>
 
-          {/* People Intelligence Categories */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Data Quality & Opportunities */}
-            <Card>
-              <div className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Data Quality & Opportunities</h3>
-                <div className="space-y-4">
-                  {topCategories.flags.map((flag, index) => (
-                    <div key={flag.name} className="border rounded-lg p-3 bg-gray-50">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm font-medium text-gray-500">#{index + 1}</span>
-                          <Badge className={flag.color}>{flag.name}</Badge>
-                        </div>
-                        <span className="text-sm font-semibold text-gray-900">
-                          {flag.count.toLocaleString()}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-blue-600 font-medium">{flag.action}</span>
-                        <span className="text-gray-600">{flag.strategy}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Card>
-
-            {/* Political Engagement Intelligence */}
-            <Card>
-              <div className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Political Engagement Intelligence</h3>
-                <div className="space-y-4">
-                  {topCategories.keywords.map((keyword, index) => (
-                    <div key={keyword.name} className="border rounded-lg p-3 bg-gray-50">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm font-medium text-gray-500">#{index + 1}</span>
-                          <Badge className={keyword.color}>{keyword.name}</Badge>
-                        </div>
-                        <span className="text-sm font-semibold text-gray-900">
-                          {keyword.count.toLocaleString()}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-purple-600 font-medium">{keyword.type}</span>
-                        <div className="flex gap-2">
-                          <span className="text-blue-600">{keyword.action}</span>
-                          <span className="text-gray-600">• {keyword.strategy}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Card>
-
-            {/* Donor Circles & Networks */}
-            <Card>
-              <div className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Donor Circles & Networks</h3>
-                <div className="space-y-4">
-                  {topCategories.clubs.map((club, index) => (
-                    <div key={club.name} className="border rounded-lg p-3 bg-gray-50">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm font-medium text-gray-500">#{index + 1}</span>
-                          <Badge className={club.color}>{club.name}</Badge>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-sm font-semibold text-crimson-blue">{club.count} members</div>
-                          <div className="text-xs text-gray-600">Avg: ${club.avgDonation.toLocaleString()}</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-green-600 font-medium">{club.potential}</span>
-                        <div className="flex gap-2">
-                          <span className="text-blue-600">{club.action}</span>
-                          <span className="text-gray-600">• {club.strategy}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Card>
-          </div>
-
-          {/* Top Fundraising Markets */}
-          <Card>
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Fundraising Markets</h3>
-              <div className="space-y-4">
-                {topCategories.locations.cities.map((city, index) => (
-                  <div key={city.name} className="border rounded-lg p-4 bg-gray-50">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm font-medium text-gray-500">#{index + 1}</span>
-                        <div>
-                          <div className="font-semibold text-gray-900">{city.name}</div>
-                          <div className="text-xs text-gray-600">{city.strength}</div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-lg font-bold text-crimson-blue">{city.count.toLocaleString()}</div>
-                        <div className="text-xs text-gray-600">${(city.raised / 1000000).toFixed(1)}M raised</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-green-600 font-medium">{city.potential} potential</span>
-                      <div className="flex gap-2">
-                        <span className="text-blue-600">{city.action}</span>
-                        <span className="text-gray-600">• {city.strategy}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Card>
-
-          {/* Top Counties */}
-          <Card>
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Strategic Counties</h3>
-              <div className="space-y-3">
-                {topCategories.locations.counties.map((county, index) => (
-                  <div key={county.name} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm font-medium text-gray-500">#{index + 1}</span>
-                      <div>
-                        <div className="font-semibold text-gray-900">{county.name}</div>
-                        <div className="text-xs text-blue-600">{county.strength}</div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-sm font-bold text-crimson-blue">{county.count.toLocaleString()}</div>
-                      <div className="text-xs text-green-600">{county.potential}</div>
-                      <div className="text-xs text-gray-600">{county.strategy}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Card>
         </div>
 
         {/* Right Column - Smart Suggestions & Quick Wins */}
