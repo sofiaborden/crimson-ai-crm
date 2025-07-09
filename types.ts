@@ -1,7 +1,7 @@
 
 import { ReactNode } from 'react';
 
-export type View = 'home' | 'profile' | 'compliance' | 'people' | 'fundraising' | 'treasury' | 'data-entry' | 'events' | 'more' | 'settings' | 'system';
+export type View = 'home' | 'profile' | 'compliance' | 'people' | 'fundraising' | 'treasury' | 'data-entry' | 'events' | 'more' | 'settings' | 'system' | 'search-demo';
 
 export interface NavItem {
   id: View;

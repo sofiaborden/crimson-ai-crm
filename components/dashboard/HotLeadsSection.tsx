@@ -207,15 +207,15 @@ Your support would help us reach more voters in the final push. What do you thin
 
   return (
     <>
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="bg-red-500 p-3 rounded-lg">
-              <FireIcon className="w-6 h-6 text-white" />
+      <div className="bg-white rounded-lg border border-gray-200 p-3">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <div className="bg-red-500 p-1.5 rounded-lg">
+              <FireIcon className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Hot Leads</h2>
-              <p className="text-sm text-gray-600">Ready-to-call prospects with high conversion probability</p>
+              <h2 className="text-base font-bold text-gray-900">Hot Leads</h2>
+              <p className="text-xs text-gray-600">High conversion prospects</p>
             </div>
           </div>
           <div className="text-right">
@@ -224,70 +224,62 @@ Your support would help us reach more voters in the final push. What do you thin
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-2">
           {hotLeads.map((lead) => (
-            <div key={lead.id} className="border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="flex items-center gap-3 sm:gap-4 flex-1">
+            <div key={lead.id} className="border border-gray-200 rounded-lg p-2 hover:shadow-sm transition-shadow">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 flex-1 min-w-0">
                   <img
                     src={lead.avatar}
                     alt={lead.name}
-                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover flex-shrink-0"
+                    className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                   />
                   <div className="flex-1 min-w-0">
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1">
+                    <div className="flex items-center gap-2 mb-1">
                       <button
                         onClick={() => handleDonorClick(lead.name)}
-                        className="font-semibold text-blue-600 hover:text-blue-800 truncate underline-offset-2 hover:underline transition-colors text-left"
+                        className="font-semibold text-blue-600 hover:text-blue-800 truncate underline-offset-2 hover:underline transition-colors text-sm"
                       >
                         {lead.name}
                       </button>
-                      <span className={`text-xs px-2 py-1 rounded-full border ${getPriorityColor(lead.priority)} self-start sm:self-auto`}>
+                      <span className={`text-xs px-1.5 py-0.5 rounded-full border ${getPriorityColor(lead.priority)}`}>
                         {lead.priority}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-1 line-clamp-2">{lead.reason}</p>
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs text-gray-500">
+                    <p className="text-xs text-gray-600 mb-1 line-clamp-1">{lead.reason}</p>
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
                       <span className="flex items-center gap-1">
                         <ClockIcon className="w-3 h-3" />
                         <span className="truncate">{lead.bestTimeToCall}</span>
                       </span>
-                      <span className="truncate">Last: {lead.lastContact}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-                  <div className="text-left sm:text-right order-2 sm:order-1">
-                    <div className="text-lg font-bold text-green-600">
+                <div className="flex items-center gap-2">
+                  <div className="text-right">
+                    <div className="text-sm font-bold text-green-600">
                       ${lead.suggestedAsk.toLocaleString()}
                     </div>
-                    <div className={`text-sm font-medium ${getConfidenceColor(lead.confidenceScore)}`}>
-                      {lead.confidenceScore}% confidence
+                    <div className={`text-xs font-medium ${getConfidenceColor(lead.confidenceScore)}`}>
+                      {lead.confidenceScore}%
                     </div>
                   </div>
 
-                  <div className="flex gap-2 order-1 sm:order-2">
+                  <div className="flex gap-1">
                     <button
                       onClick={() => handleQuickCall(lead)}
-                      className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 transition-colors touch-manipulation"
+                      className="bg-green-500 text-white p-1.5 rounded hover:bg-green-600 transition-colors"
                       title="Quick call"
                     >
-                      <PhoneIcon className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleEmail(lead)}
-                      className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition-colors touch-manipulation"
-                      title="Send email"
-                    >
-                      <MailIcon className="w-4 h-4" />
+                      <PhoneIcon className="w-3 h-3" />
                     </button>
                     <button
                       onClick={() => handleViewScript(lead)}
-                      className="bg-purple-500 text-white p-2 rounded-lg hover:bg-purple-600 transition-colors touch-manipulation"
+                      className="bg-purple-500 text-white p-1.5 rounded hover:bg-purple-600 transition-colors"
                       title="View call script"
                     >
-                      <DocumentTextIcon className="w-4 h-4" />
+                      <DocumentTextIcon className="w-3 h-3" />
                     </button>
                   </div>
                 </div>

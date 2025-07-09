@@ -3,11 +3,13 @@ import { ReactNode } from 'react';
 import { View } from '../../types';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
-import { SparklesIcon, LightBulbIcon, CheckCircleIcon, ArrowTrendingUpIcon, UsersIcon, PuzzlePieceIcon, ArrowPathIcon, MapPinIcon, TrendingUpIcon } from '../../constants';
+import { SparklesIcon, LightBulbIcon, CheckCircleIcon, ArrowTrendingUpIcon, UsersIcon, PuzzlePieceIcon, ArrowPathIcon, MapPinIcon, TrendingUpIcon, MagnifyingGlassIcon } from '../../constants';
 import RealTimeDonationTracker from './RealTimeDonationTracker';
 import AIDailyBriefing from './AIDailyBriefing';
 import QuickActionsBar from './QuickActionsBar';
 import HotLeadsSection from './HotLeadsSection';
+import SearchModal from '../search/SearchModal';
+import { useSearch } from '../../hooks/useSearch';
 
 interface HomeDashboardProps {
   setView: (view: View) => void;
@@ -33,14 +35,42 @@ const ActionTile: React.FC<{ title: string; subtitle: ReactNode; cta: string; ic
   </Card>
 );
 
-const QuickStat: React.FC<{ label: string; value: string; }> = ({ label, value }) => (
-    <div className="bg-white p-2 rounded-lg border border-gray-100">
-        <p className="text-xs text-text-secondary font-medium">{label}</p>
-        <p className="text-lg font-bold text-text-primary mt-0.5">{value}</p>
+const QuickStat: React.FC<{
+  label: string;
+  value: string;
+  onClick?: () => void;
+  cardType?: string;
+}> = ({ label, value, onClick, cardType }) => (
+    <div
+      className={`bg-white p-2 rounded-lg border border-gray-100 transition-all ${
+        onClick ? 'cursor-pointer hover:shadow-md hover:border-crimson-blue group' : ''
+      }`}
+      onClick={onClick}
+    >
+        <p className={`text-xs font-medium ${
+          onClick ? 'text-text-secondary group-hover:text-crimson-blue' : 'text-text-secondary'
+        } transition-colors`}>
+          {label}
+        </p>
+        <p className={`text-lg font-bold mt-0.5 ${
+          onClick ? 'text-text-primary group-hover:text-crimson-blue' : 'text-text-primary'
+        } transition-colors`}>
+          {value}
+        </p>
+        {onClick && (
+          <div className="mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="flex items-center text-xs text-crimson-blue">
+              <MagnifyingGlassIcon className="w-3 h-3 mr-1" />
+              Click to search
+            </div>
+          </div>
+        )}
     </div>
 );
 
 const HomeDashboard: React.FC<HomeDashboardProps> = ({ setView, setProfileId }) => {
+  const { isSearchOpen, searchConfig, closeSearch, searchFromCard } = useSearch();
+
   const handleViewProfile = () => {
     setProfileId('joseph-banks');
     setView('profile');
@@ -50,77 +80,134 @@ const HomeDashboard: React.FC<HomeDashboardProps> = ({ setView, setProfileId }) 
     setView('compliance');
   }
 
+  // Search handlers for quick stats
+  const handleTotalDonorsClick = () => {
+    searchFromCard('donors-only', { count: 199138 });
+  };
+
+  const handlePledgesClick = () => {
+    searchFromCard('pledges-outstanding', { amount: 220510 });
+  };
+
+  const handleActiveVotersClick = () => {
+    searchFromCard('active-voters', { count: 78, percentage: true });
+  };
+
+  const handleMissingContactClick = () => {
+    searchFromCard('missing-contact', { count: 12, percentage: true });
+  };
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* Compact Quick Stats Header */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 p-2.5 bg-gray-50 rounded-lg border border-gray-200">
-        <QuickStat label="Total Donors" value="199,138" />
-        <QuickStat label="Pledges Outstanding" value="$220,510" />
-        <QuickStat label="Average Gift" value="$87.50" />
-        <QuickStat label="% Active Voters" value="78%" />
-        <QuickStat label="% Missing Contact" value="12%" />
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 p-2 bg-gray-50 rounded-lg border border-gray-200">
+        <QuickStat
+          label="Total Donors"
+          value="199,138"
+          onClick={handleTotalDonorsClick}
+          cardType="donors-only"
+        />
+        <QuickStat
+          label="Pledges Outstanding"
+          value="$220,510"
+          onClick={handlePledgesClick}
+          cardType="pledges-outstanding"
+        />
+        <QuickStat
+          label="Average Gift"
+          value="$87.50"
+        />
+        <QuickStat
+          label="% Active Voters"
+          value="78%"
+          onClick={handleActiveVotersClick}
+          cardType="active-voters"
+        />
+        <QuickStat
+          label="% Missing Contact"
+          value="12%"
+          onClick={handleMissingContactClick}
+          cardType="missing-contact"
+        />
       </div>
 
-      {/* Hero Section - Real-Time Donation Tracker */}
+      {/* Compact Real-Time Donation Tracker */}
       <RealTimeDonationTracker />
 
-      {/* AI Daily Briefing - Enhanced with Quick Wins */}
-      <AIDailyBriefing setView={setView} setProfileId={setProfileId} />
-
-      {/* Collapsible Quick Actions Bar */}
+      {/* Enhanced Quick Actions Bar - Always Visible */}
       <QuickActionsBar />
 
-      {/* Main Content - Focused on Hot Leads */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-        <div className="lg:col-span-3">
-          {/* Hot Leads Section - Primary Focus */}
+      {/* Three-Column Layout for Better Space Usage */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+        {/* Column 1: AI Daily Briefing */}
+        <div className="lg:col-span-1">
+          <AIDailyBriefing setView={setView} setProfileId={setProfileId} />
+        </div>
+
+        {/* Column 2: Hot Leads Section */}
+        <div className="lg:col-span-1">
           <HotLeadsSection />
         </div>
 
+        {/* Column 3: AI Curated Segments */}
         <div className="lg:col-span-1">
-          {/* AI Curated Segments - Professional */}
           <Card title="AI Curated Segments">
-            <div className="space-y-2">
-              <div className="p-2.5 bg-gray-50 rounded-lg border border-gray-100">
-                <div className="flex items-center gap-2 mb-1">
-                  <div className="p-1 bg-blue-100 rounded">
+            <div className="space-y-1.5">
+              <div
+                className="flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-100 hover:bg-blue-50 hover:border-blue-200 transition-colors cursor-pointer group"
+                onClick={() => searchFromCard('ai-segment', { count: 1571, segmentId: 'comeback-crew' })}
+              >
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-blue-100 rounded group-hover:bg-blue-200 transition-colors">
                     <ArrowPathIcon className="w-3 h-3 text-blue-600" />
                   </div>
-                  <h5 className="font-semibold text-sm text-gray-900">Comeback Crew</h5>
+                  <div>
+                    <h5 className="font-semibold text-xs text-gray-900 group-hover:text-blue-900">Comeback Crew</h5>
+                    <p className="text-xs text-gray-600">1,571 • $113K potential</p>
+                  </div>
                 </div>
-                <p className="text-xs text-gray-600 mb-2">1,571 donors • ~$113,000 potential</p>
-                <div className="flex gap-1">
-                  <Button variant="secondary" size="sm" className="flex-1 text-xs py-1">View</Button>
-                  <Button variant="secondary" size="sm" className="flex-1 text-xs py-1">Campaign</Button>
+                <div className="flex items-center gap-1">
+                  <MagnifyingGlassIcon className="w-3 h-3 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <Button variant="secondary" size="sm" className="text-xs px-2 py-1">View</Button>
                 </div>
               </div>
-              <div className="p-2.5 bg-gray-50 rounded-lg border border-gray-100">
-                <div className="flex items-center gap-2 mb-1">
-                  <div className="p-1 bg-green-100 rounded">
+              <div
+                className="flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-100 hover:bg-green-50 hover:border-green-200 transition-colors cursor-pointer group"
+                onClick={() => searchFromCard('ai-segment', { count: 303, segmentId: 'neighborhood-mvps' })}
+              >
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-green-100 rounded group-hover:bg-green-200 transition-colors">
                     <MapPinIcon className="w-3 h-3 text-green-600" />
                   </div>
-                  <h5 className="font-semibold text-sm text-gray-900">Neighborhood MVPs</h5>
+                  <div>
+                    <h5 className="font-semibold text-xs text-gray-900 group-hover:text-green-900">Neighborhood MVPs</h5>
+                    <p className="text-xs text-gray-600">303 • $104K potential</p>
+                  </div>
                 </div>
-                <p className="text-xs text-gray-600 mb-2">303 donors • ~$104,000 potential</p>
-                <div className="flex gap-1">
-                  <Button variant="secondary" size="sm" className="flex-1 text-xs py-1">View</Button>
-                  <Button variant="secondary" size="sm" className="flex-1 text-xs py-1">Campaign</Button>
+                <div className="flex items-center gap-1">
+                  <MagnifyingGlassIcon className="w-3 h-3 text-green-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <Button variant="secondary" size="sm" className="text-xs px-2 py-1">View</Button>
                 </div>
               </div>
-              <div className="p-2.5 bg-gray-50 rounded-lg border border-gray-100">
-                <div className="flex items-center gap-2 mb-1">
-                  <div className="p-1 bg-purple-100 rounded">
+              <div
+                className="flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-100 hover:bg-purple-50 hover:border-purple-200 transition-colors cursor-pointer group"
+                onClick={() => searchFromCard('ai-segment', { count: 578, segmentId: 'level-up-list' })}
+              >
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-purple-100 rounded group-hover:bg-purple-200 transition-colors">
                     <TrendingUpIcon className="w-3 h-3 text-purple-600" />
                   </div>
-                  <h5 className="font-semibold text-sm text-gray-900">Level-Up List</h5>
+                  <div>
+                    <h5 className="font-semibold text-xs text-gray-900 group-hover:text-purple-900">Level-Up List</h5>
+                    <p className="text-xs text-gray-600">578 • $21K potential</p>
+                  </div>
                 </div>
-                <p className="text-xs text-gray-600 mb-2">578 donors • ~$21,300 potential</p>
-                <div className="flex gap-1">
-                  <Button variant="secondary" size="sm" className="flex-1 text-xs py-1">View</Button>
-                  <Button variant="secondary" size="sm" className="flex-1 text-xs py-1">Campaign</Button>
+                <div className="flex items-center gap-1">
+                  <MagnifyingGlassIcon className="w-3 h-3 text-purple-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <Button variant="secondary" size="sm" className="text-xs px-2 py-1">View</Button>
                 </div>
               </div>
-              <Button variant="secondary" className="w-full mt-2 text-sm py-2" onClick={() => setView('fundraising')}>
+              <Button variant="secondary" className="w-full mt-2 text-xs py-1.5" onClick={() => setView('fundraising')}>
                 View All 8 Segments →
               </Button>
             </div>
@@ -128,28 +215,14 @@ const HomeDashboard: React.FC<HomeDashboardProps> = ({ setView, setProfileId }) 
         </div>
       </div>
 
-      {/* More Tools - Streamlined */}
-      <div className="bg-gradient-to-r from-gray-50 to-blue-50 border border-gray-200 rounded-lg p-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-white rounded-lg shadow-sm">
-              <PuzzlePieceIcon className="w-5 h-5 text-crimson-blue" />
-            </div>
-            <div>
-              <h4 className="font-semibold text-gray-900">More AI Tools</h4>
-              <p className="text-sm text-gray-600">Advanced segments, data cleaning & analytics</p>
-            </div>
-          </div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => setView('fundraising')}
-            className="px-4"
-          >
-            Explore →
-          </Button>
-        </div>
-      </div>
+      {/* Search Modal */}
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={closeSearch}
+        searchType={searchConfig.type}
+        initialFilters={searchConfig.filters}
+        searchContext={searchConfig.context}
+      />
     </div>
   );
 };

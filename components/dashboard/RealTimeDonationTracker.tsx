@@ -146,15 +146,15 @@ const RealTimeDonationTracker: React.FC = () => {
         </div>
       )}
 
-      <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-xl border border-green-200 p-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className="bg-green-500 p-2 rounded-lg">
-              <CurrencyDollarIcon className="w-5 h-5 text-white" />
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-3">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <div className="bg-green-500 p-1.5 rounded-lg">
+              <CurrencyDollarIcon className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">Live Donation Tracker</h2>
-              <p className="text-xs text-gray-600">Real-time fundraising progress</p>
+              <h2 className="text-base font-bold text-gray-900">Live Donation Tracker</h2>
+              <p className="text-xs text-gray-600">Real-time activity</p>
             </div>
           </div>
           <div className="flex items-center gap-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">
@@ -163,107 +163,49 @@ const RealTimeDonationTracker: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Goal Progress - Flippable Card */}
-          <div className="lg:col-span-2">
-            <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          {/* Compact Goal Progress */}
+          <div>
+            <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-2 text-sm">
               <TrophyIcon className="w-4 h-4 text-yellow-500" />
               Goal Progress
             </h3>
-            {(() => {
-              const currentGoal = goals[currentGoalIndex];
-              const percentage = getProgressPercentage(currentGoal.current, currentGoal.target);
-              const isNearGoal = percentage >= 80;
-
-              return (
-                <div className="bg-white rounded-lg p-4 border border-gray-200 relative">
-                  {/* Navigation Arrows */}
-                  <div className="absolute top-3 right-3 flex gap-1">
-                    <button
-                      onClick={prevGoal}
-                      className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
-                      aria-label="Previous goal"
-                    >
-                      <ChevronLeftIcon className="w-4 h-4 text-gray-600" />
-                    </button>
-                    <button
-                      onClick={nextGoal}
-                      className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
-                      aria-label="Next goal"
-                    >
-                      <ChevronRightIcon className="w-4 h-4 text-gray-600" />
-                    </button>
-                  </div>
-
-                  {/* Goal Content */}
-                  <div className="pr-20">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="font-semibold text-gray-900 text-lg">{currentGoal.label}</span>
-                      <span className="text-sm text-gray-600">{currentGoal.deadline}</span>
+            <div className="space-y-2">
+              {goals.map((goal, index) => {
+                const percentage = getProgressPercentage(goal.current, goal.target);
+                return (
+                  <div key={index} className="bg-gray-50 rounded-lg p-2 border border-gray-200">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-xs font-medium text-gray-900">{goal.label}</span>
+                      <span className="text-xs text-gray-500">{percentage.toFixed(0)}%</span>
                     </div>
-
-                    <div className="flex justify-between items-center mb-3">
-                      <span className="text-xl font-bold text-gray-900">
-                        {formatCurrency(currentGoal.current)}
-                      </span>
-                      <span className="text-sm text-gray-600">
-                        of {formatCurrency(currentGoal.target)}
-                      </span>
-                    </div>
-
-                    <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden mb-3">
+                    <div className="w-full bg-gray-200 rounded-full h-1.5 mb-1">
                       <div
-                        className={`h-full ${currentGoal.color} transition-all duration-700 ease-out ${isNearGoal ? 'animate-pulse' : ''}`}
+                        className={`h-1.5 rounded-full transition-all duration-500 ${goal.color}`}
                         style={{ width: `${percentage}%` }}
                       ></div>
                     </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium text-gray-700">
-                        {percentage.toFixed(1)}% complete
-                      </span>
-                      {isNearGoal && (
-                        <span className="text-sm text-orange-600 font-medium flex items-center gap-1">
-                          <FireIcon className="w-4 h-4" />
-                          Almost there!
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Goal Indicators */}
-                    <div className="flex justify-center gap-3 mt-4">
-                      {goals.map((goal, index) => (
-                        <button
-                          key={index}
-                          onClick={() => setCurrentGoalIndex(index)}
-                          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 border ${
-                            index === currentGoalIndex
-                              ? 'bg-blue-500 text-white border-blue-500 shadow-md'
-                              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400 hover:shadow-sm'
-                          }`}
-                          aria-label={`View ${goal.label} goal`}
-                        >
-                          {goal.label}
-                        </button>
-                      ))}
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="font-medium text-gray-900">{formatCurrency(goal.current)}</span>
+                      <span className="text-gray-500">of {formatCurrency(goal.target)}</span>
                     </div>
                   </div>
-                </div>
-              );
-            })()}
+                );
+              })}
+            </div>
           </div>
 
           {/* Recent Donations Feed */}
           <div>
-            <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-3">
+            <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-2 text-sm">
               <SparklesIcon className="w-4 h-4 text-blue-500" />
               Recent Donations
             </h3>
-            <div className="bg-white rounded-lg border border-gray-200 max-h-64 overflow-y-auto">
+            <div className="bg-white rounded-lg border border-gray-200 max-h-48 overflow-y-auto">
               {recentDonations.map((donation, index) => (
                 <div
                   key={donation.id}
-                  className={`p-3 border-b border-gray-100 last:border-b-0 transition-all duration-300 ${
+                  className={`p-2 border-b border-gray-100 last:border-b-0 transition-all duration-300 ${
                     index === 0 ? 'bg-green-50 animate-fade-in' : ''
                   }`}
                 >

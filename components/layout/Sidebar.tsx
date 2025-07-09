@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { ReactNode } from 'react';
 import { NavItem, View } from '../../types';
-import { HomeIcon, UsersIcon, FundraisingIcon, ComplianceIcon, TreasuryIcon, DataEntryIcon, CalendarIcon, MoreIcon, SettingsIcon, SystemIcon, ChevronRightIcon, SparklesIcon, ChevronDoubleRightIcon, ChevronDoubleLeftIcon } from '../../constants';
+import { HomeIcon, UsersIcon, FundraisingIcon, ComplianceIcon, TreasuryIcon, DataEntryIcon, CalendarIcon, MoreIcon, SettingsIcon, SystemIcon, ChevronRightIcon, SparklesIcon, ChevronDoubleRightIcon, ChevronDoubleLeftIcon, MagnifyingGlassIcon } from '../../constants';
 
 interface SidebarProps {
   currentView: View;
@@ -50,6 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
   ];
 
   const systemNavItems: NavItem[] = [
+    { id: 'search-demo', label: 'Search Demo', icon: <MagnifyingGlassIcon className="w-5 h-5" /> },
     { id: 'settings', label: 'Settings', icon: <SettingsIcon className="w-5 h-5" /> },
     { id: 'system', label: 'System', icon: <SystemIcon className="w-5 h-5" /> },
   ];

@@ -4,8 +4,10 @@ import Card from '../ui/Card';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
 import DonorProfileModal from '../ui/DonorProfileModal';
+import SearchModal from '../search/SearchModal';
 import { getDonorProfileByName } from '../../utils/mockDonorProfiles';
 import { Donor } from '../../types';
+import { useSearch } from '../../hooks/useSearch';
 import {
   UsersIcon,
   SparklesIcon,
@@ -184,6 +186,7 @@ const smartSuggestions = [
 const PeopleDashboard: React.FC<PeopleDashboardProps> = ({ setView, setProfileId }) => {
   const [selectedDonor, setSelectedDonor] = useState<Donor | null>(null);
   const [showDonorProfile, setShowDonorProfile] = useState(false);
+  const { isSearchOpen, searchConfig, closeSearch, searchFromCard } = useSearch();
 
   const handleViewProfile = () => {
     setProfileId('joseph-banks');
@@ -198,22 +201,27 @@ const PeopleDashboard: React.FC<PeopleDashboardProps> = ({ setView, setProfileId
     }
   };
 
-  const StatCard: React.FC<{ 
-    title: string; 
-    value: string; 
-    change?: number; 
+  const StatCard: React.FC<{
+    title: string;
+    value: string;
+    change?: number;
     icon: React.ComponentType<any>;
     subtitle?: string;
-  }> = ({ title, value, change, icon: Icon, subtitle }) => (
-    <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer">
+    cardType?: string;
+    count?: number;
+  }> = ({ title, value, change, icon: Icon, subtitle, cardType, count }) => (
+    <Card
+      className="p-4 hover:shadow-md transition-shadow cursor-pointer group"
+      onClick={() => cardType && searchFromCard(cardType, { count })}
+    >
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-600">{title}</p>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
+          <p className="text-sm font-medium text-gray-600 group-hover:text-crimson-blue transition-colors">{title}</p>
+          <p className="text-2xl font-bold text-gray-900 group-hover:text-crimson-blue transition-colors">{value}</p>
           {subtitle && <p className="text-xs text-gray-500 mt-1">{subtitle}</p>}
         </div>
         <div className="flex flex-col items-end">
-          <Icon className="w-8 h-8 text-crimson-blue mb-2" />
+          <Icon className="w-8 h-8 text-crimson-blue mb-2 group-hover:scale-110 transition-transform" />
           {change !== undefined && (
             <div className={`flex items-center text-sm ${change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
               {change >= 0 ? (
@@ -224,6 +232,12 @@ const PeopleDashboard: React.FC<PeopleDashboardProps> = ({ setView, setProfileId
               {Math.abs(change)}%
             </div>
           )}
+        </div>
+      </div>
+      <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex items-center text-xs text-crimson-blue">
+          <MagnifyingGlassIcon className="w-3 h-3 mr-1" />
+          Click to search
         </div>
       </div>
     </Card>
@@ -245,6 +259,8 @@ const PeopleDashboard: React.FC<PeopleDashboardProps> = ({ setView, setProfileId
           change={peopleStats.peopleChange}
           icon={UsersIcon}
           subtitle={`+${peopleStats.newThisMonth.toLocaleString()} this month`}
+          cardType="total-people"
+          count={peopleStats.totalPeople}
         />
         <StatCard
           title="All-Time Donors"
@@ -252,18 +268,24 @@ const PeopleDashboard: React.FC<PeopleDashboardProps> = ({ setView, setProfileId
           change={peopleStats.donorsChange}
           icon={CurrencyDollarIcon}
           subtitle="Active & lapsed combined"
+          cardType="donors-only"
+          count={peopleStats.totalDonors}
         />
         <StatCard
           title="New This Month"
           value={peopleStats.newThisMonth.toLocaleString()}
           icon={SparklesIcon}
           subtitle="First-time donors"
+          cardType="new-donors"
+          count={peopleStats.newThisMonth}
         />
         <StatCard
           title="Lapsed This Month"
           value={peopleStats.lapsedThisMonth.toLocaleString()}
           icon={ClockIcon}
           subtitle="Need re-engagement"
+          cardType="lapsed-donors"
+          count={peopleStats.lapsedThisMonth}
         />
       </div>
 
@@ -289,6 +311,7 @@ const PeopleDashboard: React.FC<PeopleDashboardProps> = ({ setView, setProfileId
               <div
                 key={segment.id}
                 className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all cursor-pointer group"
+                onClick={() => searchFromCard('ai-segment', { count: segment.count, segmentId: segment.id })}
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-10 h-10 bg-crimson-blue/10 rounded-lg flex items-center justify-center">
@@ -307,12 +330,26 @@ const PeopleDashboard: React.FC<PeopleDashboardProps> = ({ setView, setProfileId
                     {segment.count.toLocaleString()}
                   </span>
                   <div className="flex gap-1">
-                    <Button variant="ghost" size="xs">
+                    <Button
+                      variant="ghost"
+                      size="xs"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        searchFromCard('ai-segment', { count: segment.count, segmentId: segment.id });
+                      }}
+                      title="View List"
+                    >
                       <EyeIcon className="w-3 h-3" />
                     </Button>
-                    <Button variant="ghost" size="xs">
+                    <Button variant="ghost" size="xs" title="Create Smart List">
                       <ArrowPathRoundedSquareIcon className="w-3 h-3" />
                     </Button>
+                  </div>
+                </div>
+                <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center text-xs text-crimson-blue">
+                    <MagnifyingGlassIcon className="w-3 h-3 mr-1" />
+                    Click to search segment
                   </div>
                 </div>
               </div>
@@ -694,6 +731,15 @@ const PeopleDashboard: React.FC<PeopleDashboardProps> = ({ setView, setProfileId
         donor={selectedDonor}
         isOpen={showDonorProfile}
         onClose={() => setShowDonorProfile(false)}
+      />
+
+      {/* Search Modal */}
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={closeSearch}
+        searchType={searchConfig.type}
+        initialFilters={searchConfig.filters}
+        searchContext={searchConfig.context}
       />
     </div>
   );

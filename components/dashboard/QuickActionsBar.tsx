@@ -85,8 +85,8 @@ const QuickActionsBar: React.FC = () => {
       title: 'Bulk Thanks',
       description: 'Send thank you messages',
       icon: <HeartIcon className="w-5 h-5" />,
-      color: 'bg-pink-500',
-      hoverColor: 'hover:bg-pink-600',
+      color: 'bg-crimson-blue',
+      hoverColor: 'hover:bg-crimson-dark-blue',
       action: handleBulkThankYou,
       badge: '23 pending'
     },
@@ -140,35 +140,72 @@ const QuickActionsBar: React.FC = () => {
     }
   ];
 
+  // Get top 3 most important actions
+  const topActions = quickActions.filter(action =>
+    action.urgent || ['quick-call', 'bulk-thanks', 'voice-memo'].includes(action.id)
+  ).slice(0, 3);
+
+  const remainingActions = quickActions.filter(action =>
+    !topActions.some(topAction => topAction.id === action.id)
+  );
+
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-2">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-1.5">
+    <div className="bg-white rounded-lg border border-gray-200 p-3">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
           <BoltIcon className="w-4 h-4 text-yellow-500" />
           Quick Actions
         </h3>
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 transition-colors"
-        >
-          <span className="text-xs">{isExpanded ? 'Hide' : 'Show'} Tools</span>
-          <svg
-            className={`w-3.5 h-3.5 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        {remainingActions.length > 0 && (
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="flex items-center gap-1 text-xs text-gray-600 hover:text-gray-900 transition-colors"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
+            <span>{isExpanded ? 'Less' : `+${remainingActions.length} more`}</span>
+            <svg
+              className={`w-3 h-3 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        )}
       </div>
 
-      {isExpanded && (
-        <div className="mt-3">
-          <div className="text-xs text-gray-600 mb-3">One-click power tools for instant productivity</div>
+      {/* Always Visible Top Actions */}
+      <div className="grid grid-cols-3 gap-2 mb-3">
+        {topActions.map((action) => (
+          <button
+            key={action.id}
+            onClick={action.action}
+            className={`
+              relative group ${action.color} ${action.hoverColor}
+              text-white rounded-lg p-2 transition-all duration-200
+              hover:scale-105 hover:shadow-md active:scale-95
+              ${action.urgent ? 'ring-2 ring-yellow-400 ring-opacity-50' : ''}
+            `}
+          >
+            <div className="flex flex-col items-center gap-1">
+              {action.icon}
+              <span className="text-xs font-medium text-center leading-tight">{action.title}</span>
+              {action.badge && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 py-0.5 rounded-full text-[10px] font-bold">
+                  {action.badge}
+                </span>
+              )}
+            </div>
+          </button>
+        ))}
+      </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2">
-            {quickActions.map((action) => (
+      {/* Expandable Additional Actions */}
+      {isExpanded && remainingActions.length > 0 && (
+        <div className="border-t border-gray-200 pt-3">
+          <div className="text-xs text-gray-600 mb-2">Additional Tools</div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {remainingActions.map((action) => (
               <button
                 key={action.id}
                 onClick={action.action}
